@@ -98,7 +98,7 @@ template = """<?xml version="1.0" encoding="UTF-8"?>
     <rect>
      <x>30</x>
      <y>70</y>
-     <width>49</width>
+     <width>61</width>
      <height>16</height>
     </rect>
    </property>
@@ -106,10 +106,37 @@ template = """<?xml version="1.0" encoding="UTF-8"?>
     <string>Масштаб</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="vvod">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>50</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ввод</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ok">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>80</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Готово</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
 </ui>
+
 """
 
 
@@ -152,6 +179,13 @@ class Example(QWidget):
         self.map.setPixmap(self.pixmap)
         self.mashtab_button.clicked.connect(self.m_move)
         self.search.clicked.connect(self.map_move)
+        self.vvod.clicked.connect(self.vvod_api)
+        self.ok.clicked.connect(self.ok_api)
+
+    def vvod_api(self):
+        self.coords.setReadOnly(False)
+        self.mashtab.setReadOnly(False)
+    def ok_api(self):
         self.coords.setReadOnly(True)
         self.mashtab.setReadOnly(True)
 
