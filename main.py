@@ -118,8 +118,8 @@ class Example(QWidget):
         super().__init__()
         f = io.StringIO(template)
         uic.loadUi(f, self)
-        self.x = '52.317632'
-        self.y = '54.886474'
+        self.x = 52.317632
+        self.y = 54.886474
         self.mash_api = 0.001
         self.getImage()
         self.initUI()
@@ -152,6 +152,8 @@ class Example(QWidget):
         self.map.setPixmap(self.pixmap)
         self.mashtab_button.clicked.connect(self.m_move)
         self.search.clicked.connect(self.map_move)
+        self.coords.setReadOnly(True)
+        self.mashtab.setReadOnly(True)
 
     def map_move(self):
         cord = self.coords.text().split(', ')
@@ -167,13 +169,21 @@ class Example(QWidget):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_A:
-            pass
+            if self.x - self.mash_api / 2 >= -170:
+                self.x -= self.mash_api / 2
+                self.getImage()
         if event.key() == Qt.Key.Key_W:
-            pass
+            if self.y + self.mash_api / 2 <= 85:
+                self.y += self.mash_api / 2
+                self.getImage()
         if event.key() == Qt.Key.Key_S:
-            pass
+            if self.y - self.mash_api / 2 >= -85:
+                self.y -= self.mash_api / 2
+                self.getImage()
         if event.key() == Qt.Key.Key_D:
-            pass
+            if self.x + self.mash_api / 2 <= 170:
+                self.x += self.mash_api / 2
+                self.getImage()
         if event.key() == Qt.Key.Key_Up:
             if self.mash_api * 10 <= 10:
                 self.mash_api *= 10
