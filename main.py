@@ -6,7 +6,6 @@ from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton
 from PyQt6 import uic
 from PyQt6.QtCore import Qt
-SCREEN_SIZE = [600, 450]
 template = """<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Map</class>
@@ -15,8 +14,8 @@ template = """<?xml version="1.0" encoding="UTF-8"?>
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1037</width>
-    <height>670</height>
+    <width>593</width>
+    <height>574</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,10 +24,10 @@ template = """<?xml version="1.0" encoding="UTF-8"?>
   <widget class="QLabel" name="map">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>200</y>
-     <width>741</width>
-     <height>401</height>
+     <x>10</x>
+     <y>140</y>
+     <width>571</width>
+     <height>421</height>
     </rect>
    </property>
    <property name="text">
@@ -38,9 +37,9 @@ template = """<?xml version="1.0" encoding="UTF-8"?>
   <widget class="QLineEdit" name="coords">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>50</y>
-     <width>421</width>
+     <x>0</x>
+     <y>30</y>
+     <width>341</width>
      <height>22</height>
     </rect>
    </property>
@@ -48,8 +47,8 @@ template = """<?xml version="1.0" encoding="UTF-8"?>
   <widget class="QPushButton" name="search">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>50</y>
+     <x>350</x>
+     <y>30</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -61,8 +60,8 @@ template = """<?xml version="1.0" encoding="UTF-8"?>
   <widget class="QLineEdit" name="mashtab">
    <property name="geometry">
     <rect>
-     <x>700</x>
-     <y>50</y>
+     <x>0</x>
+     <y>90</y>
      <width>113</width>
      <height>22</height>
     </rect>
@@ -71,14 +70,40 @@ template = """<?xml version="1.0" encoding="UTF-8"?>
   <widget class="QPushButton" name="mashtab_button">
    <property name="geometry">
     <rect>
-     <x>830</x>
-     <y>50</y>
+     <x>120</x>
+     <y>90</y>
      <width>93</width>
      <height>28</height>
     </rect>
    </property>
    <property name="text">
     <string>Применить</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>10</y>
+     <width>71</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Координаты</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>70</y>
+     <width>49</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Масштаб</string>
    </property>
   </widget>
  </widget>
@@ -95,7 +120,7 @@ class Example(QWidget):
         uic.loadUi(f, self)
         self.x = '52.317632'
         self.y = '54.886474'
-        self.mash_api = '0.0008'
+        self.mash_api = 0.001
         self.getImage()
         self.initUI()
 
@@ -118,9 +143,10 @@ class Example(QWidget):
         self.map_file = "map.png"
         with open(self.map_file, "wb") as file:
             file.write(response.content)
+        self.pixmap = QPixmap(self.map_file)
+        self.map.setPixmap(self.pixmap)
 
     def initUI(self):
-
         ## Изображение
         self.pixmap = QPixmap(self.map_file)
         self.map.setPixmap(self.pixmap)
@@ -131,32 +157,33 @@ class Example(QWidget):
         cord = self.coords.text().split(', ')
         self.y, self.x = cord[0], cord[1]
         self.getImage()
-        self.pixmap = QPixmap(self.map_file)
-        self.map.setPixmap(self.pixmap)
 
     def m_move(self):
         self.mash_api = self.mashtab.text()
         self.getImage()
-        self.pixmap = QPixmap(self.map_file)
-        self.map.setPixmap(self.pixmap)
-
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
         os.remove(self.map_file)
 
-    # def keyPressEvent(self, event):
-    #     if event.key() == Qt.Key.Key_A:
-    #         pass
-    #     if event.key() == Qt.Key.Key_W:
-    #         pass
-    #     if event.key() == Qt.Key.Key_S:
-    #         pass
-    #     if event.key() == Qt.Key.Key_D:
-    #         pass
-    #     if event.key() == Qt.Key.Key_Up:
-    #         pass
-    #     if event.key() == Qt.Key.Key_Down:
-    #         pass
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_A:
+            pass
+        if event.key() == Qt.Key.Key_W:
+            pass
+        if event.key() == Qt.Key.Key_S:
+            pass
+        if event.key() == Qt.Key.Key_D:
+            pass
+        if event.key() == Qt.Key.Key_Up:
+            if self.mash_api * 10 <= 10:
+                self.mash_api *= 10
+                self.getImage()
+
+        if event.key() == Qt.Key.Key_Down:
+            if self.mash_api / 10 >= 0.0001:
+                self.mash_api /= 10
+                self.getImage()
+
 
 
 def except_hook(cls, exception, traceback):
