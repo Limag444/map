@@ -191,11 +191,11 @@ class Example(QWidget):
 
     def map_move(self):
         cord = self.coords.text().split(', ')
-        self.y, self.x = cord[0], cord[1]
+        self.y, self.x = float(cord[0]), float(cord[1])
         self.getImage()
 
     def m_move(self):
-        self.mash_api = self.mashtab.text()
+        self.mash_api = float(self.mashtab.text())
         self.getImage()
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
