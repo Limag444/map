@@ -132,6 +132,19 @@ template = """<?xml version="1.0" encoding="UTF-8"?>
     <string>Готово</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="theme_butn">
+   <property name="geometry">
+    <rect>
+     <x>492</x>
+     <y>20</y>
+     <width>101</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Изменить тему</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
@@ -148,6 +161,7 @@ class Example(QWidget):
         self.x = 52.317632
         self.y = 54.886474
         self.mash_api = 0.001
+        self.theme = 'theme=light'
         self.getImage()
         self.initUI()
 
@@ -155,9 +169,8 @@ class Example(QWidget):
         server_address = 'https://static-maps.yandex.ru/v1?'
         api_key = '5f3b13d9-8561-40d2-8233-7ab951740aee'
         ll_spn = f'll={self.x},{self.y}8&spn=0.001,{self.mash_api}'
-        # Готовим запрос.
 
-        map_request = f"{server_address}{ll_spn}&apikey={api_key}"
+        map_request = f"{server_address}{ll_spn}&{self.theme}&apikey={api_key}"
         response = requests.get(map_request)
 
         if not response:
@@ -166,7 +179,6 @@ class Example(QWidget):
             print("Http статус:", response.status_code, "(", response.reason, ")")
             sys.exit(1)
 
-        # Запишем полученное изображение в файл.
         self.map_file = "map.png"
         with open(self.map_file, "wb") as file:
             file.write(response.content)
@@ -174,13 +186,13 @@ class Example(QWidget):
         self.map.setPixmap(self.pixmap)
 
     def initUI(self):
-        ## Изображение
         self.pixmap = QPixmap(self.map_file)
         self.map.setPixmap(self.pixmap)
-        self.mashtab_button.clicked.connect(self.m_move)
+        self.mashtab_button.clicked.connect(self.mash_move)
         self.search.clicked.connect(self.map_move)
         self.vvod.clicked.connect(self.vvod_api)
         self.ok.clicked.connect(self.ok_api)
+        self.theme_butn.clicked.connect(self.theme_fun)
 
     def vvod_api(self):
         self.coords.setReadOnly(False)
@@ -194,11 +206,18 @@ class Example(QWidget):
         self.y, self.x = float(cord[0]), float(cord[1])
         self.getImage()
 
-    def m_move(self):
+    def mash_move(self):
         self.mash_api = float(self.mashtab.text())
         self.getImage()
+
+    def theme_fun(self):
+        if self.theme == 'theme=light':
+            self.theme = 'theme=dark'
+        else:
+            self.theme = 'theme=light'
+        self.getImage()
+
     def closeEvent(self, event):
-        """При закрытии формы подчищаем за собой"""
         os.remove(self.map_file)
 
     def keyPressEvent(self, event):
