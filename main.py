@@ -3,7 +3,7 @@ import sys
 import io
 import requests
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton
+from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6 import uic
 from PyQt6.QtCore import Qt
 template = """<?xml version="1.0" encoding="UTF-8"?>
@@ -221,28 +221,28 @@ class Example(QWidget):
         os.remove(self.map_file)
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key.Key_A:
+        if event.key() == Qt.Key.Key_Left:
             if self.x - self.mash_api / 2 >= -170:
                 self.x -= self.mash_api / 2
                 self.getImage()
-        if event.key() == Qt.Key.Key_W:
+        if event.key() == Qt.Key.Key_Up:
             if self.y + self.mash_api / 2 <= 85:
                 self.y += self.mash_api / 2
                 self.getImage()
-        if event.key() == Qt.Key.Key_S:
+        if event.key() == Qt.Key.Key_Down:
             if self.y - self.mash_api / 2 >= -85:
                 self.y -= self.mash_api / 2
                 self.getImage()
-        if event.key() == Qt.Key.Key_D:
+        if event.key() == Qt.Key.Key_Right:
             if self.x + self.mash_api / 2 <= 170:
                 self.x += self.mash_api / 2
                 self.getImage()
-        if event.key() == Qt.Key.Key_Up:
+        if event.key() == Qt.Key.Key_PageUp:
             if self.mash_api * 10 <= 10:
                 self.mash_api *= 10
                 self.getImage()
 
-        if event.key() == Qt.Key.Key_Down:
+        if event.key() == Qt.Key.Key_PageDown:
             if self.mash_api / 10 >= 0.0001:
                 self.mash_api /= 10
                 self.getImage()
