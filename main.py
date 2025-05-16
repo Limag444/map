@@ -106,32 +106,6 @@ template = """<?xml version="1.0" encoding="UTF-8"?>
     <string>Масштаб</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="vvod">
-   <property name="geometry">
-    <rect>
-     <x>500</x>
-     <y>50</y>
-     <width>93</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Ввод</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="ok">
-   <property name="geometry">
-    <rect>
-     <x>500</x>
-     <y>80</y>
-     <width>93</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Готово</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="theme_butn">
    <property name="geometry">
     <rect>
@@ -190,24 +164,33 @@ class Example(QWidget):
         self.map.setPixmap(self.pixmap)
         self.mashtab_button.clicked.connect(self.mash_move)
         self.search.clicked.connect(self.map_move)
-        self.vvod.clicked.connect(self.vvod_api)
-        self.ok.clicked.connect(self.ok_api)
         self.theme_butn.clicked.connect(self.theme_fun)
-
-    def vvod_api(self):
-        self.coords.setReadOnly(False)
-        self.mashtab.setReadOnly(False)
-    def ok_api(self):
-        self.coords.setReadOnly(True)
-        self.mashtab.setReadOnly(True)
+        self.coords.clearFocus()
+        self.mashtab.clearFocus()
+        self.mashtab_button.clearFocus()
+        self.search.clearFocus()
+        self.theme_butn.clearFocus()
+        self.getImage()
 
     def map_move(self):
         cord = self.coords.text().split(', ')
-        self.y, self.x = float(cord[0]), float(cord[1])
+        if cord != ['']:
+            self.y, self.x = float(cord[0]), float(cord[1])
+        self.coords.clearFocus()
+        self.mashtab.clearFocus()
+        self.mashtab_button.clearFocus()
+        self.search.clearFocus()
+        self.theme_butn.clearFocus()
         self.getImage()
 
     def mash_move(self):
-        self.mash_api = float(self.mashtab.text())
+        if self.mashtab.text() != '':
+            self.mash_api = float(self.mashtab.text())
+        self.coords.clearFocus()
+        self.mashtab.clearFocus()
+        self.mashtab_button.clearFocus()
+        self.search.clearFocus()
+        self.theme_butn.clearFocus()
         self.getImage()
 
     def theme_fun(self):
@@ -215,12 +198,18 @@ class Example(QWidget):
             self.theme = 'theme=dark'
         else:
             self.theme = 'theme=light'
+        self.coords.clearFocus()
+        self.mashtab.clearFocus()
+        self.mashtab_button.clearFocus()
+        self.search.clearFocus()
+        self.theme_butn.clearFocus()
         self.getImage()
 
     def closeEvent(self, event):
         os.remove(self.map_file)
 
     def keyPressEvent(self, event):
+        self.coords.clearFocus()
         if event.key() == Qt.Key.Key_Left:
             if self.x - self.mash_api / 2 >= -170:
                 self.x -= self.mash_api / 2
